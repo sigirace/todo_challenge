@@ -9,9 +9,8 @@ import CategoryModal from "./CategoryModal";
 const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  max-width: 480px;
+  width: 480px;
   margin: 0 auto;
-  justify-items: center;
   gap: 10px;
 `;
 
@@ -27,14 +26,6 @@ const AddButton = styled.button`
   overflow: hidden;
   white-space: nowrap;
 `;
-
-const tmpData = (id: number): ICategory => {
-  return {
-    id: id,
-    text: "TO_DOTO_DOTO_DOTO_DOTO_DOTO_DOTO_DOTO_DOTO_DO",
-    isSelected: true,
-  };
-};
 
 export default function CategoryList() {
   const [categoryList, setCategoryList] = useRecoilState(categorySelector);

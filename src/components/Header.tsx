@@ -13,7 +13,7 @@ const Title = styled.h1`
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding: 20px;
+  padding: 30px;
   font-size: 32px;
   font-weight: bold;
 `;
