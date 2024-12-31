@@ -16,7 +16,15 @@ const ToDoItem = styled.div`
   position: relative;
 `;
 
-export default function Todo({ todo }: { todo: ITodo }) {
+export default function Todo({
+  todo,
+  onChangeCategory,
+  onDeleteTodo,
+}: {
+  todo: ITodo;
+  onChangeCategory: (todoId: number, category: string) => void;
+  onDeleteTodo: (todoId: number) => void;
+}) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const categories = useRecoilValue(categorySelector);
@@ -42,11 +50,11 @@ export default function Todo({ todo }: { todo: ITodo }) {
             {
               text: "삭제",
               color: "red",
-              onClick: () => console.log(`삭제: ${todo.title}`),
+              onClick: () => onDeleteTodo(todo.id),
             },
             ...categories.map((category) => ({
               text: category.text,
-              onClick: () => console.log(`카테고리 선택: ${category.text}`),
+              onClick: () => onChangeCategory(todo.id, category.text),
             })),
           ]}
           onClose={handleCloseMenu}
