@@ -54,7 +54,8 @@ export default function DropdownMenu({
         <DropdownMenuItem
           key={index}
           isDeletedColor={item.color}
-          onClick={() => {
+          onClick={(e) => {
+            e.stopPropagation();
             item.onClick();
             onClose();
           }}

@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import Category from "./Category";
 import { ICategory } from "../interface";
-import { useRecoilState } from "recoil";
-import { categorySelector } from "../atom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { categorySelector, selectedCategoryState } from "../atom";
 import { useEffect, useState } from "react";
 import CategoryModal from "./CategoryModal";
 
@@ -30,8 +30,37 @@ const AddButton = styled.button`
 export default function CategoryList() {
   const [categoryList, setCategoryList] = useRecoilState(categorySelector);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useRecoilState(
+    selectedCategoryState
+  );
+
+  const onDeleteCategory = (category: string) => {
+    if (category === "TO_DO" || category === "DONE" || category === "DOING") {
+      alert("기본 카테고리는 삭제할 수 없습니다.");
+      return;
+    }
+    const updatedCategories = categoryList.filter((c) => c.text !== category);
+
+    if (category === selectedCategory) {
+      setSelectedCategory(updatedCategories[0]?.text || "");
+      setCategoryList(
+        updatedCategories.map((c, index) => ({
+          ...c,
+          isSelected: index === 0,
+        }))
+      );
+    } else {
+      setCategoryList(updatedCategories);
+    }
+    const filteredCategories = updatedCategories.filter(
+      (c) => c.text !== "TO_DO" && c.text !== "DONE" && c.text !== "DOING"
+    );
+    localStorage.setItem("categories", JSON.stringify(filteredCategories));
+  };
 
   const handleCategoryClick = (category: ICategory) => {
+    console.log("handleCategoryClick");
+    console.log("category", category);
     const updatedCategories = categoryList.map((c: ICategory) => {
       return c.id === category.id
         ? { ...c, isSelected: true }
@@ -71,7 +100,8 @@ export default function CategoryList() {
         <Category
           key={category.id}
           category={category}
-          onClick={() => handleCategoryClick(category)}
+          onSelect={() => handleCategoryClick(category)}
+          onDelete={() => onDeleteCategory(category.text)}
         />
       ))}
       <AddButton onClick={() => setIsModalOpen(true)}>+</AddButton>

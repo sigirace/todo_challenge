@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { ICategory } from "../interface";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import DropdownMenu from "./DropdownMenu";
 
 const CategoryBtn = styled.button.withConfig({
@@ -21,10 +21,12 @@ const CategoryBtn = styled.button.withConfig({
 
 export default function Category({
   category,
-  onClick,
+  onSelect,
+  onDelete,
 }: {
   category: ICategory;
-  onClick: () => void;
+  onSelect: () => void;
+  onDelete: (categoryId: string) => void;
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
@@ -35,14 +37,10 @@ export default function Category({
     setIsMenuOpen(true);
   };
 
-  const handleCloseMenu = () => {
-    setIsMenuOpen(false);
-  };
-
   return (
     <CategoryBtn
       isSelected={category.isSelected}
-      onClick={() => onClick()}
+      onClick={() => onSelect()}
       onContextMenu={handleContextMenu}
     >
       {category.text}
@@ -54,10 +52,10 @@ export default function Category({
             {
               text: "삭제",
               color: "red",
-              onClick: () => console.log(`삭제: ${category.text}`),
+              onClick: () => onDelete(category.text),
             },
           ]}
-          onClose={handleCloseMenu}
+          onClose={() => setIsMenuOpen(false)}
         />
       )}
     </CategoryBtn>
