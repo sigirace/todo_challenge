@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { ICategory } from "../interface";
+import { useState } from "react";
+import DropdownMenu from "./DropdownMenu";
 
 const CategoryBtn = styled.button.withConfig({
   shouldForwardProp: (prop) => prop !== "isSelected",
@@ -19,14 +21,43 @@ const CategoryBtn = styled.button.withConfig({
 
 export default function Category({
   category,
-  onClick,
+  onSelect,
+  onDelete,
 }: {
   category: ICategory;
-  onClick: () => void;
+  onSelect: () => void;
+  onDelete: (categoryId: string) => void;
 }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+
+  const handleContextMenu = (event: React.MouseEvent) => {
+    event.preventDefault();
+    setMenuPosition({ x: event.clientX, y: event.clientY });
+    setIsMenuOpen(true);
+  };
+
   return (
-    <CategoryBtn isSelected={category.isSelected} onClick={() => onClick()}>
+    <CategoryBtn
+      isSelected={category.isSelected}
+      onClick={() => onSelect()}
+      onContextMenu={handleContextMenu}
+    >
       {category.text}
+      {isMenuOpen && (
+        <DropdownMenu
+          x={menuPosition.x}
+          y={menuPosition.y}
+          items={[
+            {
+              text: "삭제",
+              color: "red",
+              onClick: () => onDelete(category.text),
+            },
+          ]}
+          onClose={() => setIsMenuOpen(false)}
+        />
+      )}
     </CategoryBtn>
   );
 }

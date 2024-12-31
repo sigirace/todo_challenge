@@ -1,4 +1,8 @@
+import { useRef } from "react";
 import styled from "styled-components";
+import { ITodo } from "../interface";
+import { useRecoilValue } from "recoil";
+import { selectedCategoryState } from "../atom";
 
 const Container = styled.div`
   display: flex;
@@ -22,11 +26,33 @@ const Button = styled.button`
   border-radius: 5px;
 `;
 
-export default function ToDoInput() {
+export default function ToDoInput({
+  onAddTodo,
+}: {
+  onAddTodo: (todo: ITodo) => void;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const selectedCategory = useRecoilValue(selectedCategoryState);
+  const handleAddTodo = () => {
+    if (inputRef.current) {
+      if (inputRef.current.value === "") {
+        alert("할 일을 입력해주세요");
+        return;
+      }
+      const newTodo: ITodo = {
+        id: Date.now(),
+        title: inputRef.current.value,
+        category: selectedCategory,
+      };
+      onAddTodo(newTodo);
+      inputRef.current.value = "";
+    }
+  };
+
   return (
     <Container>
-      <Input placeholder="할 일을 입력하세요" />
-      <Button>추가</Button>
+      <Input placeholder="할 일을 입력하세요" ref={inputRef} />
+      <Button onClick={handleAddTodo}>추가</Button>
     </Container>
   );
 }

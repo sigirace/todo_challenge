@@ -12,6 +12,7 @@ const ModalOverlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 `;
 
 const ModalContainer = styled.div`
@@ -26,6 +27,7 @@ const ModalContainer = styled.div`
 `;
 
 const ModalHeader = styled.h2`
+  color: black;
   margin-bottom: 20px;
 `;
 
