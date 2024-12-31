@@ -9,3 +9,10 @@ export interface ITodo {
   title: string;
   category: ICategory["text"];
 }
+
+export interface DropdownMenuProps {
+  x: number;
+  y: number;
+  items: { text: string; color?: string; onClick: () => void }[];
+  onClose: () => void;
+}

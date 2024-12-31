@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { ITodo } from "../interface";
 import Todo from "./ToDo";
 import { useEffect } from "react";
-import { todoSelector } from "../atom";
-import { useRecoilState } from "recoil";
+import { todoSelector, todosState } from "../atom";
+import { useRecoilState, useRecoilValue } from "recoil";
 import ToDoInput from "./ToDoInput";
 
 const Container = styled.div`
@@ -17,15 +17,16 @@ const Container = styled.div`
 `;
 
 export default function ToDoList() {
+  const totalTodos = useRecoilValue(todosState);
   const [todos, setTodos] = useRecoilState(todoSelector);
   const onAddTodo = (todo: ITodo) => {
-    localStorage.setItem("todos", JSON.stringify([...todos, todo]));
-    setTodos([...todos, todo]);
+    localStorage.setItem("todos", JSON.stringify([...totalTodos, todo]));
+    setTodos([...totalTodos, todo]);
   };
 
   useEffect(() => {
-    const todos = JSON.parse(localStorage.getItem("todos") || "[]");
-    setTodos(todos);
+    const localTodos = JSON.parse(localStorage.getItem("todos") || "[]");
+    setTodos(localTodos);
   }, []);
   return (
     <>

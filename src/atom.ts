@@ -50,7 +50,9 @@ export const todosState = atom<ITodo[]>({
 export const todoSelector = selector({
   key: "todoSelector",
   get: ({ get }) => {
-    return get(todosState);
+    const todos = get(todosState);
+    const selectedCategory = get(selectedCategoryState);
+    return todos.filter((todo) => todo.category === selectedCategory);
   },
   set: ({ set, get }, newTodos) => {
     set(todosState, newTodos);

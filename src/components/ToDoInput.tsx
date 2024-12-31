@@ -35,6 +35,10 @@ export default function ToDoInput({
   const selectedCategory = useRecoilValue(selectedCategoryState);
   const handleAddTodo = () => {
     if (inputRef.current) {
+      if (inputRef.current.value === "") {
+        alert("할 일을 입력해주세요");
+        return;
+      }
       const newTodo: ITodo = {
         id: Date.now(),
         title: inputRef.current.value,
