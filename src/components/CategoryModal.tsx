@@ -27,6 +27,7 @@ const ModalContainer = styled.div`
 `;
 
 const ModalHeader = styled.h2`
+  color: black;
   margin-bottom: 20px;
 `;
 

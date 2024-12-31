@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import { ITodo } from "../interface";
 import { useEffect, useRef, useState } from "react";
+import { useRecoilValue } from "recoil";
+import { categorySelector } from "../atom";
 
 const ToDoItem = styled.div`
   display: flex;
@@ -11,11 +13,10 @@ const ToDoItem = styled.div`
   border-radius: 5px;
   width: 100%;
   position: relative;
-  cursor: pointer;
 `;
 
 const DropdownMenu = styled.ul<{ x: number; y: number }>`
-  position: fixed; /* 화면 좌표 기준으로 고정 */
+  position: fixed;
   top: ${({ y }) => y}px;
   left: ${({ x }) => x}px;
   background-color: white;
@@ -28,7 +29,10 @@ const DropdownMenu = styled.ul<{ x: number; y: number }>`
   z-index: 10;
 `;
 
-const DropdownMenuItem = styled.li`
+const DropdownMenuItem = styled.li.withConfig({
+  shouldForwardProp: (prop) => prop !== "isDeltedColor",
+})<{ isDeltedColor?: string }>`
+  color: ${({ isDeltedColor }) => isDeltedColor || "black"};
   padding: 10px 20px;
   cursor: pointer;
   &:hover {
@@ -40,16 +44,17 @@ export default function Todo({ todo }: { todo: ITodo }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const menuRef = useRef<HTMLDivElement>(null);
+  const categories = useRecoilValue(categorySelector);
 
   const handleContextMenu = (event: React.MouseEvent) => {
     event.preventDefault();
-    setMenuPosition({ x: event.clientX, y: event.clientY }); // 마우스 클릭 위치 저장
-    setIsMenuOpen(true); // 드롭다운 메뉴 열기
+    setMenuPosition({ x: event.clientX, y: event.clientY });
+    setIsMenuOpen(true);
   };
 
   const handleClickOutside = (event: MouseEvent) => {
     if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-      setIsMenuOpen(false); // 드롭다운 메뉴 닫기
+      setIsMenuOpen(false);
     }
   };
 
@@ -69,9 +74,14 @@ export default function Todo({ todo }: { todo: ITodo }) {
       {todo.title}
       {isMenuOpen && (
         <DropdownMenu x={menuPosition.x} y={menuPosition.y}>
-          <DropdownMenuItem>삭제</DropdownMenuItem>
-          <DropdownMenuItem>할 일 2</DropdownMenuItem>
-          <DropdownMenuItem>할 일 3</DropdownMenuItem>
+          <DropdownMenuItem isDeltedColor="red">삭제</DropdownMenuItem>
+          {categories.map((category) => {
+            return (
+              <DropdownMenuItem key={category.id}>
+                {category.text}
+              </DropdownMenuItem>
+            );
+          })}
         </DropdownMenu>
       )}
     </ToDoItem>
