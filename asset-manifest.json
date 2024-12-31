@@ -1,0 +1,12 @@
+{
+  "files": {
+    "main.css": "/todo_challenge/static/css/main.58ce69e5.css",
+    "main.js": "/todo_challenge/static/js/main.379ba5a2.js",
+    "index.html": "/todo_challenge/index.html",
+    "main.379ba5a2.js.map": "/todo_challenge/static/js/main.379ba5a2.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.58ce69e5.css",
+    "static/js/main.379ba5a2.js"
+  ]
+}
